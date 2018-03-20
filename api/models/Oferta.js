@@ -47,6 +47,39 @@ module.exports = {
         field: 'oferta_id'
       }
     });
+    Oferta.hasMany(HistorialIdea, {
+      as: 'historialIdea',
+      foreignKey: {
+        name: 'ideaId',
+        field: 'idea_id'
+      }
+    });
+
+    Oferta.hasMany(Proponente, {
+      as: 'proponentes',
+      foreignKey: {
+        name: 'ideaId',
+        field: 'idea_id'
+      }
+    });
+
+    Oferta.belongsToMany(Materia, {
+      through: IdeaMateria,
+      as: 'asignaturas',
+      foreignKey: {
+        name: 'ideaId',
+        field: 'idea_id'
+      }
+    });
+
+    Oferta.belongsToMany(Materia, {
+      through: Prerrequisito,
+      as: 'prerrequisitos',
+      foreignKey: {
+        name: 'ideaId',
+        field: 'idea_id'
+      }
+    });
   },
   // Configuraciones y métodos del modelo.
   options: {
