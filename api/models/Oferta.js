@@ -12,6 +12,10 @@ module.exports = {
       primaryKey: true,
       autoIncrement: true,
       field: 'id'
+    },
+    profesorId: {
+      type: Sequelize.INTEGER,
+      field: 'profesor_id'
     }
   },
   // Describe las asociaciones que tiene con los demás modelos.

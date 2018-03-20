@@ -139,9 +139,9 @@ module.exports = {
 		if (!profesorId) {
 			return res.forbidden();
 		}
-    return Oferta.find({
-      where:{inscripciones:profesorId},
+    return Idea.findAll({
       include: [
+        {model:Oferta, as:'ofertas', where:{profesorId:70091045} },
         {model: Materia, as: 'asignaturas' },
         {model: Materia, as: 'prerrequisitos'},
         {model: Proponente, as: 'proponentes'},
