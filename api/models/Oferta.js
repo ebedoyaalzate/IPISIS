@@ -12,10 +12,6 @@ module.exports = {
       primaryKey: true,
       autoIncrement: true,
       field: 'id'
-    },
-    profesorId: {
-      type: Sequelize.INTEGER,
-      field: 'profesor_id'
     }
 },
   // Describe las asociaciones que tiene con los demás modelos.
@@ -50,11 +46,7 @@ module.exports = {
         name: 'ofertaId',
         field: 'oferta_id'
       }
-<<<<<<< HEAD
     });    
-=======
-    });
->>>>>>> a35dd2b4fd6461cdc4e17d49d9e4631261a9b4cb
   },
   // Configuraciones y métodos del modelo.
   options: {
