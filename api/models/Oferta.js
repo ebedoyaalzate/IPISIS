@@ -13,7 +13,7 @@ module.exports = {
       autoIncrement: true,
       field: 'id'
     }
-  },
+},
   // Describe las asociaciones que tiene con los demás modelos.
   associations: function () {
     Oferta.belongsTo(Idea, {
@@ -45,39 +45,6 @@ module.exports = {
       foreignKey: {
         name: 'ofertaId',
         field: 'oferta_id'
-      }
-    });
-    Oferta.hasMany(HistorialIdea, {
-      as: 'historialIdea',
-      foreignKey: {
-        name: 'ideaId',
-        field: 'idea_id'
-      }
-    });
-
-    Oferta.hasMany(Proponente, {
-      as: 'proponentes',
-      foreignKey: {
-        name: 'ideaId',
-        field: 'idea_id'
-      }
-    });
-
-    Oferta.belongsToMany(Materia, {
-      through: IdeaMateria,
-      as: 'asignaturas',
-      foreignKey: {
-        name: 'ideaId',
-        field: 'idea_id'
-      }
-    });
-
-    Oferta.belongsToMany(Materia, {
-      through: Prerrequisito,
-      as: 'prerrequisitos',
-      foreignKey: {
-        name: 'ideaId',
-        field: 'idea_id'
       }
     });
   },

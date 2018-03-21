@@ -6,9 +6,9 @@ ipisis.controller('MisIdeasController', ["$scope", "IdeaService", function($scop
   
     $scope.mostrar = function(idea) {
       $scope.id = idea.id;
-      $scope.titulo = idea.titulo;
+      $scope.titulo = idea.ofertas;
       $scope.descripcion = idea.descripcion;
-      $scope.numMiembros = idea.numMiembros;
+      $scope.numMiembros = 12;
       $scope.numEquipos = idea.numEquipos;
       $scope.proponentes = idea.proponentes;
       $scope.asignaturas = idea.asignaturas;

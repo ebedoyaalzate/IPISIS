@@ -133,23 +133,20 @@ module.exports = {
   },
 
   misIdeas: function(req, res) {
-    var profesorId = null;
+   
 
-		profesorId = req.user.id;
-		if (!profesorId) {
-			return res.forbidden();
-		}
-    return Oferta.find({
-      where:{inscripciones:profesorId},
+		
+		 return Idea.findAll({
+      
       include: [
-        {model: Materia, as: 'asignaturas' },
-        {model: Materia, as: 'prerrequisitos'},
+       {model: Oferta, as: 'ofertas'},
+       {model: Materia, as: 'asignaturas' },
+       {model: Materia, as: 'prerrequisitos'},
         {model: Proponente, as: 'proponentes'},
         {
           model: HistorialIdea,
           as: 'historialIdea',
           where: {
-            estado: 'PROPUESTA',
             fechaActualizacion: {
               $in: [
                 sequelize.literal('SELECT MAX(`fecha_actualizacion`) FROM `historial_idea` WHERE `Idea`.`id` = `historial_idea`.`idea_id`')
