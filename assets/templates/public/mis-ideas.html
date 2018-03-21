@@ -21,6 +21,7 @@
               <th class="text-center">NOMBRE</th>
               <th class="text-center">CÓDIGO</th>
               <th class="text-center" style="min-width: 100px">DESCRIPCIÓN</th>
+	      <th class="text-center">ESTADO</th>
             </tr>
           </thead>
           <tbody class="pre-scrollable ">
@@ -34,6 +35,7 @@
                 data-target="#myModal" ng-click="mostrar(idea)">
                   <span class="glyphicon glyphicon-list-alt"></span>
                 </label>
+	      <td class="text-center">{{idea.historialIdea[0].estado}}</td>
               </td>
             </tr>
           </tbody>
