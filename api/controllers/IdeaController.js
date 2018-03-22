@@ -4,7 +4,7 @@
 * @description :: Server-side logic for managing ideas
 * @help        :: See http://sailsjs.org/#!/documentation/concepts/Controllers
 */
-
+const enviar = require('../services/Enviar');
 module.exports = {
   crearIdea: function(req, res) {
     // Definición de variables a utilizar
@@ -74,6 +74,22 @@ module.exports = {
       estado: 'PROPUESTA',
       fechaActualizacion: new Date()
     };
+
+    const output = `
+    <p>You have a new contact request</p>
+    <h3>Contact Details</h3>
+    <ul>  
+      <li>Name:`+titulo+`</li>
+      
+    </ul>
+    <h3>Message</h3>
+    <p>juancho</p>
+  `;
+
+  enviar.sendEmail(output);
+
+  // create reusable transporter object using the default SMTP transport
+  
 
     sequelize.transaction(t => {
       return Idea.create(idea, {transaction: t}).then(idea => {
