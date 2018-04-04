@@ -26,10 +26,11 @@ angular.module('ipisis')
       });
       return ideas;
     },
-    obtenerMisIdeas: function () {
+    obtenerMisIdeas: function (credenciales) {
       var ideas = $http({
         url: '/idea/misIdeas',
-        method: 'GET'
+        method: 'GET',
+        params: credenciales
       });
       return ideas;
     },

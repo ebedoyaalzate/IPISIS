@@ -41,6 +41,7 @@ module.exports = {
         field: 'profesor_id'
       }
     });
+    
   },
   // Configuraciones y métodos del modelo.
   options: {
