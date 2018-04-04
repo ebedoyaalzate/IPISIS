@@ -19,7 +19,7 @@ let transporter = nodemailer.createTransport({
   
   let mailOptions = {
       from: '"Nodemailer Contact" <va el correo que se usara para enviar los mensajes>', // sender address
-      to: 'juan.zapata19@udea.edu.co', // list of receivers
+      to: ['juan.zapata19@udea.edu.co'], // list of receivers
       subject: 'Node Contact Request', // Subject line
       text: 'Hello world?', // plain text body
       html: output // html body
