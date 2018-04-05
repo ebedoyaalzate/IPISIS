@@ -287,36 +287,30 @@ module.exports = {
         fechaActualizacion: new Date(),
         observacion: observacion,
         estado: estado
-      };
-      historialIdeas.push(historial);
-    });
-
-    Proponente.findAll({
-      include: [
-        {model: Idea, as: 'ideas', where: {id:ideasId}},
         
-      ]
-    })
-    .then(proponentes => {
-      proponentes.forEach(function(proponente,i,array){
-            correos[i]=proponente.correo;
+      };
+      //Se traen los correos de los proponentes relacionados acada idea para enviar informacion
+      Proponente.findAll({where:{id:ideasId[i]}})
+      .then(proponentes => {
+        proponentes.forEach(function(proponente,i,array){
+              correos[i]=proponente.correo;
+        });
+        const output = `
+        <h3>Detalles de Aprobacion de su proyecto integrador:</h3>
+         <ul>  
+          <li>Nombre de la idea:`+title+`</li>`
+          +`<li>Estado de la idea :<p>`+historial.estado+`</p></li>`
+        +`<li>Observaciones :`+historial.observacion+`</li>
+        </ul>
+       <p>Del equipo que hace IPISIS</p>
+       `;
+        enviar.sendEmail(correos,output,"Informe de Aprobacion PI");
+      })
+      .catch(err => {
+        console.log('Hubo un error');
       });
-    })
-    .catch(err => {
-      console.log('Hubo un error');
-    });
-
-    const output = `
-    <h3>Detalles de Aprobacion de su proyecto integrador:</h3>
-    <ul>  
-      <li>Nombre de la idea:`+title+`</li>`
-      +`<li>Descripcion de la idea : <p>`+descripcion+`</p></li>`
-      +`<li>Estado de la idea :`+historial.estado+`</li>
-    </ul>
-    <p>Del equipo que hace IPISIS</p>
-  `;
-
-  enviar.sendEmail(correos,output,"Informe de Aprobacion PI");
+      historialIdeas.push(historial);
+    }); 
 
     HistorialIdea.bulkCreate(historialIdeas)
     .then(data => {
