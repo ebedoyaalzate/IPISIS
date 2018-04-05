@@ -1,7 +1,7 @@
 
 const nodemailer=require('nodemailer');
 
-exports.sendEmail=function(output){
+exports.sendEmail=function(emails,output,tipoAsunto){
 
 let transporter = nodemailer.createTransport({
     host: 'smtp.gmail.com',
@@ -19,9 +19,8 @@ let transporter = nodemailer.createTransport({
   
   let mailOptions = {
       from: '"Nodemailer Contact" <va el correo que se usara para enviar los mensajes>', // sender address
-      to: ['juan.zapata19@udea.edu.co'], // list of receivers
-      subject: 'Node Contact Request', // Subject line
-      text: 'Hello world?', // plain text body
+      to: emails, // list of receivers
+      subject: tipoAsunto, // Subject line
       html: output // html body
   };
 

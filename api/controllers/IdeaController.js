@@ -5,14 +5,18 @@
 * @help        :: See http://sailsjs.org/#!/documentation/concepts/Controllers
 */
 const enviar = require('../services/Enviar');
+
 module.exports = {
+  
   crearIdea: function(req, res) {
     // Definición de variables a utilizar
     var titulo = null;
     var descripcion = null;
     var numMiembros = null;
     var numEquipos = null;
-
+    //var output1=`<ul>`;
+    var correos=[];
+    var tipoAsunto='Detalles inscripcion de idea PI';
     var idea = null;
     var prerrequisitos = null;
     var asignaturas = null;
@@ -74,19 +78,25 @@ module.exports = {
       estado: 'PROPUESTA',
       fechaActualizacion: new Date()
     };
+    
+
+    
+    for(i=0;i<proponentes.length;i++){
+        correos[i]=proponentes[i].correo;
+    };
 
     const output = `
-    <p>You have a new contact request</p>
-    <h3>Contact Details</h3>
+    <p>Su idea para proyecto integrador a sido inscrita exitosamente</p>
+    <h3>Detalles de inscripcion:</h3>
     <ul>  
-      <li>Name:`+titulo+`</li>
-      
+      <li>Nombre de la idea:`+titulo+`</li>`
+      +`<li>Descripcion de la idea : <p>`+descripcion+`</p></li>`
+      +`<li>Estado de la idea :`+historial.estado+`</li>
     </ul>
-    <h3>Message</h3>
-    <p>juancho</p>
+    <p>Del equipo que hace IPISIS</p>
   `;
 
-  enviar.sendEmail(output);
+  enviar.sendEmail(correos,output,tipoAsunto);
 
   // create reusable transporter object using the default SMTP transport
   
@@ -242,8 +252,8 @@ module.exports = {
   aprobarIdeas: function(req, res) {
     var ideasId = null;
     var opcion = null;
+    var correos=[];
     var observacion = null;
-
     var historialIdeas = [];
     var historial = null;
     var estado = '';
@@ -280,6 +290,33 @@ module.exports = {
       };
       historialIdeas.push(historial);
     });
+
+    Proponente.findAll({
+      include: [
+        {model: Idea, as: 'ideas', where: {id:ideasId}},
+        
+      ]
+    })
+    .then(proponentes => {
+      proponentes.forEach(function(proponente,i,array){
+            correos[i]=proponente.correo;
+      });
+    })
+    .catch(err => {
+      console.log('Hubo un error');
+    });
+
+    const output = `
+    <h3>Detalles de Aprobacion de su proyecto integrador:</h3>
+    <ul>  
+      <li>Nombre de la idea:`+title+`</li>`
+      +`<li>Descripcion de la idea : <p>`+descripcion+`</p></li>`
+      +`<li>Estado de la idea :`+historial.estado+`</li>
+    </ul>
+    <p>Del equipo que hace IPISIS</p>
+  `;
+
+  enviar.sendEmail(correos,output,"Informe de Aprobacion PI");
 
     HistorialIdea.bulkCreate(historialIdeas)
     .then(data => {
