@@ -257,7 +257,7 @@ module.exports = {
     var historialIdeas = [];
     var historial = null;
     var estado = '';
-
+    var titulo;
     ideasId = req.param('ideasId');
     if (!ideasId) {
       return res.badRequest({code:1, msg: 'Se deben ingresar los ids de las ideas.'});
@@ -282,6 +282,7 @@ module.exports = {
     }
 
     ideasId.forEach(function (idea, i, array) {
+      titulo='';
       historial = {
         ideaId: ideasId[i],
         fechaActualizacion: new Date(),
@@ -290,15 +291,18 @@ module.exports = {
         
       };
       //Se traen los correos de los proponentes relacionados acada idea para enviar informacion
-      Proponente.findAll({where:{id:ideasId[i]}})
+      Proponente.findAll({where:{id:ideasId[i]},
+      include:[{model:Idea, as:'ideas'}]      
+      })
       .then(proponentes => {
         proponentes.forEach(function(proponente,i,array){
               correos[i]=proponente.correo;
         });
+        titulo=proponentes.ideas.titulo;
         const output = `
         <h3>Detalles de Aprobacion de su proyecto integrador:</h3>
          <ul>  
-          <li>Nombre de la idea:`+title+`</li>`
+          <li>Nombre de la idea:`+titulo+`</li>`
           +`<li>Estado de la idea :<p>`+historial.estado+`</p></li>`
         +`<li>Observaciones :`+historial.observacion+`</li>
         </ul>
@@ -327,6 +331,9 @@ module.exports = {
     var semestre = null;
     var ofertas = null;
     var oferta = null;
+    var correos=[];
+    var titulo;
+
 
     ideaId = req.param('ideaId');
     if (!ideaId) {
@@ -353,11 +360,35 @@ module.exports = {
     else {
       ofertas = [];
       tutores.forEach(function(tutor, i, array) {
+        titulo='';
         oferta = {
           ideaId: ideaId,
           profesorId: tutor,
           semestreCodigo: semestre
         };
+        //Se traen los correos de los proponentes relacionados acada idea para enviar informacion
+      Proponente.findAll({where:{id:ideasId[i]},
+        include:[{model:Idea, as:'ideas'}]
+      })
+      .then(proponentes => {
+        proponentes.forEach(function(proponente,i,array){
+              correos[i]=proponente.correo;
+        });
+        titulo=proponentes.ideas.titulo;
+        const output = `
+        <h3>Detalles de Aprobacion de su proyecto integrador:</h3>
+         <ul>  
+          <li>Nombre de la idea:`+title+`</li>`
+          +`<li>Estado de la idea :<p>`+historial.estado+`</p></li>`
+        +`<li>Observaciones :`+historial.observacion+`</li>
+        </ul>
+       <p>Del equipo que hace IPISIS</p>
+       `;
+        enviar.sendEmail(correos,output,"Informe de Aprobacion PI");
+      })
+      .catch(err => {
+        console.log('Hubo un error');
+      });
         ofertas.push(oferta);
       });
     }
