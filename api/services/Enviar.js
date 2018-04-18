@@ -8,8 +8,8 @@ let transporter = nodemailer.createTransport({
     port: 465,
     secure: true, // true for 465, false for other ports
     auth: {
-        user: 'va el correo que se usara para enviar los mensajes', 
-        pass: 'pass del correo'  
+        user: 'udeaipisis@gmail.com', 
+        pass: 'ipisis123'  
     },
     tls:{
       rejectUnauthorized:false
@@ -18,7 +18,7 @@ let transporter = nodemailer.createTransport({
 
   
   let mailOptions = {
-      from: '"Nodemailer Contact" <va el correo que se usara para enviar los mensajes>', // sender address
+      from: '"Informe IPISIS" <udeaipisis@gmail.com>', // sender address
       to: emails, // list of receivers
       subject: tipoAsunto, // Subject line
       html: output // html body

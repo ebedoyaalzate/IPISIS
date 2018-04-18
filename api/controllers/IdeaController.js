@@ -93,7 +93,7 @@ module.exports = {
       +`<li>Descripcion de la idea : <p>`+descripcion+`</p></li>`
       +`<li>Estado de la idea :`+historial.estado+`</li>
     </ul>
-    <p>Del equipo que hace IPISIS</p>
+    <p>Correo automatico de IPISIS</p>
   `;
 
   enviar.sendEmail(correos,output,tipoAsunto);
@@ -257,7 +257,7 @@ module.exports = {
     var historialIdeas = [];
     var historial = null;
     var estado = '';
-    var titulo;
+    var title;
     ideasId = req.param('ideasId');
     if (!ideasId) {
       return res.badRequest({code:1, msg: 'Se deben ingresar los ids de las ideas.'});
@@ -298,15 +298,15 @@ module.exports = {
         proponentes.forEach(function(proponente,i,array){
               correos[i]=proponente.correo;
         });
-        titulo=proponentes.ideas.titulo;
+        title=proponentes.ideas.titulo;
         const output = `
         <h3>Detalles de Aprobacion de su proyecto integrador:</h3>
          <ul>  
-          <li>Nombre de la idea:`+titulo+`</li>`
+          <li>Nombre de la idea:`+title+`</li>`
           +`<li>Estado de la idea :<p>`+historial.estado+`</p></li>`
         +`<li>Observaciones :`+historial.observacion+`</li>
         </ul>
-       <p>Del equipo que hace IPISIS</p>
+       <p>Correo automatico de IPISIS</p>
        `;
         enviar.sendEmail(correos,output,"Informe de Aprobacion PI");
       })
@@ -332,7 +332,7 @@ module.exports = {
     var ofertas = null;
     var oferta = null;
     var correos=[];
-    var titulo;
+    var title;
 
 
     ideaId = req.param('ideaId');
@@ -374,7 +374,7 @@ module.exports = {
         proponentes.forEach(function(proponente,i,array){
               correos[i]=proponente.correo;
         });
-        titulo=proponentes.ideas.titulo;
+        title=proponentes.ideas.titulo;
         const output = `
         <h3>Detalles de Aprobacion de su proyecto integrador:</h3>
          <ul>  
@@ -382,9 +382,9 @@ module.exports = {
           +`<li>Estado de la idea :<p>`+historial.estado+`</p></li>`
         +`<li>Observaciones :`+historial.observacion+`</li>
         </ul>
-       <p>Del equipo que hace IPISIS</p>
+       <p>Correo automatico de IPISIS</p>
        `;
-        enviar.sendEmail(correos,output,"Informe de Aprobacion PI");
+        enviar.sendEmail(correos,output,"Informe de Oferta PI");
       })
       .catch(err => {
         console.log('Hubo un error');
