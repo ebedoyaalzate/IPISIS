@@ -257,7 +257,7 @@ module.exports = {
     var historialIdeas = [];
     var historial = null;
     var estado = '';
-    var title;
+    var title=null;
     ideasId = req.param('ideasId');
     if (!ideasId) {
       return res.badRequest({code:1, msg: 'Se deben ingresar los ids de las ideas.'});
@@ -282,7 +282,6 @@ module.exports = {
     }
 
     ideasId.forEach(function (idea, i, array) {
-      titulo='';
       historial = {
         ideaId: ideasId[i],
         fechaActualizacion: new Date(),
@@ -291,20 +290,20 @@ module.exports = {
         
       };
       //Se traen los correos de los proponentes relacionados acada idea para enviar informacion
-      Proponente.findAll({where:{id:ideasId[i]},
-      include:[{model:Idea, as:'ideas'}]      
+      Proponente.findAll({where:{id:historial.ideaId},
+      include:[{model:Idea, as:'idea'}]      
       })
       .then(proponentes => {
-        proponentes.forEach(function(proponente,i,array){
-              correos[i]=proponente.correo;
+        proponentes.forEach(function(proponente,j,array){
+              correos[j]=proponente.correo;
         });
-        title=proponentes.ideas.titulo;
+        title=proponentes[i].idea.titulo;
         const output = `
-        <h3>Detalles de Aprobacion de su proyecto integrador:</h3>
+        <h3>Detalles de Aprobacion de idea proyecto integrador:</h3>
          <ul>  
-          <li>Nombre de la idea:`+title+`</li>`
-          +`<li>Estado de la idea :<p>`+historial.estado+`</p></li>`
-        +`<li>Observaciones :`+historial.observacion+`</li>
+          <li>Nombre de la idea :<h3>`+title+`</h3></li>`
+          +`<li>Estado de la idea :`+historial.estado+`</li>`
+        +`<li>Observaciones :<p>`+historial.observacion+`</p>></li>
         </ul>
        <p>Correo automatico de IPISIS</p>
        `;
@@ -329,12 +328,14 @@ module.exports = {
     var ideaId = null;
     var tutores = null;
     var semestre = null;
-    var ofertas = null;
+    var ofert = null;
     var oferta = null;
     var correos=[];
-    var title;
-
-
+    var title=null;
+    var output1=null;
+    var nombreProfesor=[];
+    var output=null;
+    var j=0;
     ideaId = req.param('ideaId');
     if (!ideaId) {
       return res.badRequest({code:1, msg:'Se debe ingresar el id de la idea'});
@@ -351,37 +352,22 @@ module.exports = {
     }
 
     if (typeof tutores == 'string') {
-      ofertas = {
+      ofert = {
         ideaId: ideaId,
         tutor: tutores,
         semestreCodigo: semestre,
       }
-    }
-    else {
-      ofertas = [];
-      tutores.forEach(function(tutor, i, array) {
-        titulo='';
-        oferta = {
-          ideaId: ideaId,
-          profesorId: tutor,
-          semestreCodigo: semestre
-        };
-        //Se traen los correos de los proponentes relacionados acada idea para enviar informacion
-      Proponente.findAll({where:{id:ideasId[i]},
-        include:[{model:Idea, as:'ideas'}]
+      Proponente.findAll({where:{id:ofert.ideaId},
+        include:[{model:Idea, as:'idea'}]        
       })
       .then(proponentes => {
         proponentes.forEach(function(proponente,i,array){
               correos[i]=proponente.correo;
+              title=proponente.idea.titulo;
         });
-        title=proponentes.ideas.titulo;
-        const output = `
-        <h3>Detalles de Aprobacion de su proyecto integrador:</h3>
-         <ul>  
-          <li>Nombre de la idea:`+title+`</li>`
-          +`<li>Estado de la idea :<p>`+historial.estado+`</p></li>`
-        +`<li>Observaciones :`+historial.observacion+`</li>
-        </ul>
+      output = `
+        <h3>Su idea con el nombre `+title+` ha sido ofertada</h3>
+                   
        <p>Correo automatico de IPISIS</p>
        `;
         enviar.sendEmail(correos,output,"Informe de Oferta PI");
@@ -389,11 +375,62 @@ module.exports = {
       .catch(err => {
         console.log('Hubo un error');
       });
-        ofertas.push(oferta);
+    }
+    else {
+      ofert = [];
+      tutores.forEach(function(tutor, i, array) {
+        titulo='';
+        oferta = {
+          ideaId: ideaId,
+          profesorId: tutor,
+          semestreCodigo: semestre
+        };
+      //Busca el profesor correspondiente
+        Profesor.findAll({where:{id:tutor}                 
+            })
+            .then(profesores => {
+              
+             nombreProfesor[j]=profesores[i].nombre;
+             j++;
+           })
+            .catch(err => {
+            console.log('Hubo un error');
+            });
+        //Se traen los correos de los proponentes relacionados acada idea para enviar informacion
+        Proponente.findAll({where:{id:oferta.ideaId},
+                              include:[{model:Idea, as:'idea'}]        
+        })
+        .then(proponentes => {
+          proponentes.forEach(function(proponente,i,array){
+              
+            correos[i]=proponente.correo;
+          });
+          title=proponentes[i].idea.titulo;
+          if(nombreProfesor.length>1)
+          output1='los tutores asignados para esta idea son :'
+         else
+         output1='El tutor asignado para esta idea es :'
+        output = `
+         <h3>Su idea con el nombre `+title+` ha sido ofertada</h3>
+         <h3>`+output1 +`</h3>`;
+        for(var l=0; l<nombreProfesor.length;l++){
+         output=output+`<li>`+nombreProfesor[l]+`</li>`
+        }
+        
+
+         
+        })
+        .catch(err => {
+          console.log('Hubo un error');
+        });
+        output=output+`<p>Correo automatico de IPISIS</p>`;
+        enviar.sendEmail(correos,output,"Informe de Oferta PI");
+        ofert.push(oferta);
       });
+      
     }
 
-    Oferta.bulkCreate(ofertas)
+    Oferta.bulkCreate(ofert)
     .then(resOferta => {
       return res.created();
     })
