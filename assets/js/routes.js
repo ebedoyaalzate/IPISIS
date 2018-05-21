@@ -185,7 +185,7 @@ function($stateProvider, $urlRouterProvider, ROLES){
 	})
 	.state("misIdeas", {
 		url: "/mis-ideas",
-		templateUrl: "templates/public/mis-ideas.html",
+		templateUrl: "templates/private//profesor/mis-ideas.html",
 		controller: "MisIdeasController",
 		data: {
 			permissions: {

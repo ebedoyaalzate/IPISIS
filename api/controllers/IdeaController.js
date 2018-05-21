@@ -386,34 +386,24 @@ module.exports = {
           profesorId: tutor,
           semestreCodigo: semestre
         };
-     //Se traen los correos de los proponentes relacionados acada idea para enviar informacion
+     //Se traen los correos de los profesores que seran tutores de cada idea
           Idea.findAll({where:{id:oferta.ideaId},
                               include:[{model:Proponente, as:'proponentes'},
                                         {model:Oferta, as:'ofertas', include:[{model:Profesor, as:'profesor'}]}
                             ]        
         })
         .then(ideas => {
-          ideas[unicaIdea].proponentes.forEach(function(proponente,i,array){
-               correos[i]=proponente.correo;
-          });
           ideas[unicaIdea].ofertas.profesor.forEach(function(profe,i,array){
-            nombreProfesor[i]=profe.nombre;
-            
+            correos[i]=profe.correo;            
           });
           title=ideas[unicaIdea].titulo;
-          if(nombreProfesor.length>1)
-          output1='los tutores asignados para esta idea son :'
-         else
-         output1='El tutor asignado para esta idea es :'
-        output = `
-         <h3>Su idea con el nombre `+title+` ha sido ofertada</h3>
-         <h3>`+output1 +`</h3>`;
-        for(var l=0; l<nombreProfesor.length;l++){
-         output=output+`<li>`+nombreProfesor[l]+`</li>`
-        }
-        output=output+`<p>Correo automatico de IPISIS</p>`;
-        enviar.sendEmail(correos,output,"Informe de Oferta PI");
-        correos=[];
+          
+          output = `
+         <h3>La idea con el nombre `+title+` ha sido ofertada</h3>
+         <h3>Usted ha sido selecionado como tutor del Proyecto intregador</h3>`;
+         output=output+`<p>Correo automatico de IPISIS</p>`;
+         enviar.sendEmail(correos,output,"Informe de Oferta PI");
+         correos=[];
         })
         .catch(err => {
           console.log('Hubo un error');
