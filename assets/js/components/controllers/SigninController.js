@@ -29,6 +29,7 @@ function ($scope, $state, AuthService, ROLES) {
 			username: usuario,
 			password: contrasena
 		};
+		
 		$scope.signing = true;
 		//Llamado al servicio de signin.
 		AuthService.signinUsuario(credenciales)
