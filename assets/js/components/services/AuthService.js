@@ -23,7 +23,7 @@ var storageTipo = 'session';
 				PermRoleStore.defineRole(ROLES.PROFESOR, function() {return false;});
 				PermRoleStore.defineRole(ROLES.ESTUDIANTE, function() {return false;});
 				PermRoleStore.defineRole(rol, function() {return true;});
-				StorageService.set("userSession", res.config.params.username, storageTipo);
+				//StorageService.set("userSession", res.config.params.username, storageTipo);
 				StorageService.set("auth_token", res.data.token, storageTipo);
 				StorageService.set("rol", rol, storageTipo);
 				$rootScope.$broadcast('renovarRol');
@@ -40,7 +40,7 @@ var storageTipo = 'session';
 			PermRoleStore.defineRole(ROLES.COMITE, function() {return false;});
 			PermRoleStore.defineRole(ROLES.PROFESOR, function() {return false;});
 			PermRoleStore.defineRole(ROLES.ESTUDIANTE, function() {return false;});
-			StorageService.unset("userSession", storageTipo);
+			//StorageService.unset("userSession", storageTipo);
 			StorageService.unset("auth_token", storageTipo);
 			StorageService.unset("rol", storageTipo);
 			$rootScope.$broadcast('renovarRol');
@@ -100,7 +100,7 @@ function($q, $injector, $rootScope, ROLES) {
 			if (response.status === 401 || response.status === 403) {
 				StorageService.unset('auth_token', storageTipo);
 				StorageService.unset('rol', storageTipo);
-				StorageService.unset("userSession", storageTipo);
+				//StorageService.unset("userSession", storageTipo);
 				PermRoleStore.clearStore();
 				PermRoleStore.defineRole(ROLES.ANON, function() {return true;});
 				PermRoleStore.defineRole(ROLES.JEFE, function() {return false;});
