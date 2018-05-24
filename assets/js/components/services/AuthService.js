@@ -23,7 +23,7 @@ var storageTipo = 'session';
 				PermRoleStore.defineRole(ROLES.PROFESOR, function() {return false;});
 				PermRoleStore.defineRole(ROLES.ESTUDIANTE, function() {return false;});
 				PermRoleStore.defineRole(rol, function() {return true;});
-
+				console.log(res.config.params.username);
 				StorageService.set("auth_token", res.data.token, storageTipo);
 				StorageService.set("rol", rol, storageTipo);
 				$rootScope.$broadcast('renovarRol');
