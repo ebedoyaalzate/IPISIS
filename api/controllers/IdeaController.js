@@ -161,7 +161,7 @@ module.exports = {
   misIdeas: function(req, res) {
     var profesorId = null;
 
-		profesorId = req.user.id;
+		console.log("hola");
 		if (!profesorId) {
 			return res.forbidden();
 		}
